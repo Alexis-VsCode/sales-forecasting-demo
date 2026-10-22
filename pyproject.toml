@@ -1,0 +1,41 @@
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "sales-forecasting"
+version = "0.2.0"
+description = "Pronóstico de ventas mensuales con ARIMA/SARIMA y baselines (proyecto académico de maestría)."
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "pandas==3.0.3",
+    "numpy==2.4.6",
+    "statsmodels==0.14.6",
+    "scikit-learn==1.9.0",
+    "matplotlib==3.11.2",
+]
+
+[project.optional-dependencies]
+dev = ["pytest==9.1.1", "ruff==0.17.1", "nbconvert==7.17.2", "nbclient", "ipykernel==7.3.0"]
+h2o = ["h2o==3.46.0.12"]
+
+[project.scripts]
+sales-forecast = "sales_forecasting.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["sales_forecasting*"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+addopts = "-q"
+
+[tool.ruff]
+line-length = 100
+target-version = "py313"
+extend-exclude = ["notebooks", "h2o_demo"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP"]

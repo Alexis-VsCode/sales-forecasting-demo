@@ -1,11 +1,13 @@
-import pandas as pd
-from typing import Optional, Tuple
+"""Módulo original del taller. Se conserva el contrato de ``select_arima_order``;
+la implementación vive en ``sales_forecasting.arima`` para no duplicar lógica."""
 
-def select_arima_order(
-    series: pd.Series,
-    p_values: range = range(3),
-    d_values: range = range(1, 2),
-    q_values: range = range(3),
-    seasonal_order: Tuple[int, int, int, int] = (0, 1, 0, 12),
-) -> Tuple[Tuple[int, int, int], float]:
-    pass
+import sys
+from pathlib import Path
+
+try:
+    from sales_forecasting.arima import select_arima_order
+except ModuleNotFoundError:  # uso sin `pip install -e .`
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+    from sales_forecasting.arima import select_arima_order
+
+__all__ = ["select_arima_order"]

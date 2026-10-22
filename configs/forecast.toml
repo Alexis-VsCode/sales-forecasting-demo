@@ -1,0 +1,29 @@
+# Configuración no sensible del pipeline de pronóstico mensual.
+# Rutas relativas a la raíz del repositorio.
+
+[data]
+path = "src/data/stores_sales_forecasting.csv"
+date_column = "Order Date"
+target_column = "Sales"
+date_format = "%m/%d/%Y"
+freq = "MS"            # agregación mensual (inicio de mes)
+
+[split]
+test_size = 12         # últimos 12 meses como prueba (hold-out temporal)
+horizon = 12           # meses a pronosticar hacia el futuro
+
+[model]
+p_values = [0, 1, 2]
+d_values = [1]
+q_values = [0, 1, 2]
+seasonal_order = [0, 1, 0, 12]   # (P, D, Q, s) como en la sesión en vivo
+season_length = 12
+moving_average_window = 3
+seed = 42
+
+[diagnostics]
+alpha = 0.05
+ljung_box_lags = [6, 12]
+
+[output]
+output_dir = "reports"
