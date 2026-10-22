@@ -1,0 +1,82 @@
+{
+  "data_path": "stores_sales_forecasting.csv",
+  "freq": "MS",
+  "periods": 48,
+  "start": "2014-01-01",
+  "end": "2017-12-01",
+  "train_periods": 36,
+  "test_periods": 12,
+  "test_start": "2017-01-01",
+  "best_order": [
+    0,
+    1,
+    0
+  ],
+  "seasonal_order": [
+    0,
+    1,
+    0,
+    12
+  ],
+  "best_aic": 467.6394054465005,
+  "adf_train": {
+    "adf_statistic": -3.877815260323448,
+    "p_value": 0.0022043184651179097,
+    "used_lag": 0,
+    "n_obs": 35,
+    "critical_5pct": -2.9485102040816327,
+    "is_stationary": true
+  },
+  "adf_train_seasonal_diff": {
+    "adf_statistic": -4.415960643375619,
+    "p_value": 0.00027811059414533594,
+    "used_lag": 0,
+    "n_obs": 23,
+    "critical_5pct": -2.998499866852963,
+    "is_stationary": true
+  },
+  "metrics": {
+    "Seasonal naive": {
+      "MAE": 3747.0253,
+      "RMSE": 4473.384,
+      "sMAPE": 25.6994,
+      "WAPE": 20.876
+    },
+    "SARIMA(0, 1, 0)x(0, 1, 0, 12)": {
+      "MAE": 12219.0764,
+      "RMSE": 12939.4595,
+      "sMAPE": 59.2005,
+      "WAPE": 68.0769
+    },
+    "Moving average (3)": {
+      "MAE": 11688.9457,
+      "RMSE": 13105.8424,
+      "sMAPE": 59.5891,
+      "WAPE": 65.1233
+    },
+    "Naive": {
+      "MAE": 18792.7759,
+      "RMSE": 21085.7742,
+      "sMAPE": 76.7901,
+      "WAPE": 104.7013
+    }
+  },
+  "ljung_box": {
+    "6": {
+      "lb_stat": 13.2957,
+      "lb_pvalue": 0.0386
+    },
+    "12": {
+      "lb_stat": 26.0748,
+      "lb_pvalue": 0.0105
+    }
+  },
+  "environment": {
+    "python": "3.13.16",
+    "pandas": "3.0.3",
+    "numpy": "2.4.6",
+    "statsmodels": "0.14.6",
+    "matplotlib": "3.11.2",
+    "sales_forecasting": "0.2.0"
+  }
+}
