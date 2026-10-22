@@ -65,15 +65,6 @@ def test_invalid_dates(transactions_df, bad_date):
         validate_sales(df)
 
 
-@pytest.mark.xfail(
-    strict=True,
-    raises=pytest.fail.Exception,  # "DID NOT RAISE": la validación no detecta el problema
-    reason=(
-        "BUG en sales_forecasting.data.validate_sales: pd.to_datetime convierte fechas vacías "
-        "(None/''/NaN) en NaT sin error y aggregate_sales descarta esas filas en silencio. "
-        "Si se corrige, quitar este xfail."
-    ),
-)
 @pytest.mark.parametrize("empty_date", [None, ""])
 def test_empty_dates_are_rejected(transactions_df, empty_date):
     df = transactions_df.copy()

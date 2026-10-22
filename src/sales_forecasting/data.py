@@ -45,6 +45,9 @@ def validate_sales(
         out[date_column] = pd.to_datetime(out[date_column], format=date_format)
     except (ValueError, TypeError) as exc:
         raise DataValidationError(f"Fechas inválidas en '{date_column}': {exc}") from exc
+    n_nat = int(out[date_column].isna().sum())
+    if n_nat:
+        raise DataValidationError(f"{n_nat} fechas vacías en '{date_column}'")
     out[target_column] = pd.to_numeric(out[target_column], errors="coerce")
     n_null = int(out[target_column].isna().sum())
     if n_null:

@@ -13,5 +13,6 @@ def temporal_train_test_split(series: pd.Series, test_size: int) -> tuple[pd.Ser
         raise ValueError(f"test_size debe estar entre 1 y {len(series) - 1}")
     train = series.iloc[: len(series) - test_size]
     test = series.iloc[len(series) - test_size :]
-    assert train.index.max() < test.index.min()
+    if not train.index.max() < test.index.min():
+        raise ValueError("Fechas duplicadas en el borde train/test: posible fuga temporal")
     return train, test

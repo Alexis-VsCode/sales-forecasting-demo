@@ -46,15 +46,6 @@ def test_unsorted_series_is_rejected(short_monthly_series):
         temporal_train_test_split(short_monthly_series.iloc[::-1], 2)
 
 
-@pytest.mark.xfail(
-    strict=True,
-    raises=AssertionError,
-    reason=(
-        "BUG menor en sales_forecasting.split: con fechas duplicadas en el borde train/test la "
-        "validación depende de un `assert` (AssertionError, o nada con `python -O`) en vez de "
-        "ValueError. Si se corrige, quitar este xfail."
-    ),
-)
 def test_duplicated_timestamp_at_boundary_raises_value_error():
     index = pd.DatetimeIndex(["2020-01-01", "2020-02-01", "2020-02-01", "2020-03-01"])
     series = pd.Series([1.0, 2.0, 3.0, 4.0], index=index)
