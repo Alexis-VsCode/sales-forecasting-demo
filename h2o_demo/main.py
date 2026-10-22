@@ -1,12 +1,26 @@
+"""Demo de H2O AutoML (herramienta low-code) para contrastar con el notebook ARIMA.
+
+Uso, con el entorno virtual activo y ``pip install h2o==3.46.0.12``::
+
+    cd h2o_demo && python main.py      # o bien: python h2o_demo/main.py desde la raíz
+
+Requiere Java instalado (verificado con OpenJDK 21; ver reports/evidence/h2o_smoke.txt).
+"""
+
 import h2o
 import os
 from h2o.automl import H2OAutoML
 from src.eng_sales_forecasting import preprocess_ts
 
 class H2OAutoMLWrapper:
+    """Envoltura mínima sobre H2OAutoML: importar datos, entrenar y predecir."""
+
     def __init__(self, data_path: str="data/"):
         """
         Inicializa la clase H2OAutoMLWrapper.
+
+        Si ``data_path`` no es un archivo existente se usa el dataset público
+        ``powerplant_output.csv`` de los tutoriales de H2O (requiere internet).
         """
         if os.path.isfile(data_path):
             self.data_path = data_path
@@ -25,6 +39,13 @@ class H2OAutoMLWrapper:
                    max_runtime_secs: int=60,
                    project_name = "powerplant_lb_frame"
                    ):
+        """
+        Entrena H2OAutoML con una partición aleatoria train/test (``split_frame``).
+
+        Nota: la partición aleatoria es adecuada para datos tabulares i.i.d., no para
+        series de tiempo (mezcla pasado y futuro); para ventas mensuales use un corte
+        temporal como en ``sales_forecasting.split.temporal_train_test_split``.
+        """
         splits = data.split_frame(ratios=[1-test_ratio], seed=seed)
         train = splits[0]
         test = splits[1]
@@ -45,10 +66,14 @@ if __name__ == "__main__":
     # print(aml_model.leaderboard.head(15))
 
     ## Prueba con serie de tiempo
+    # preprocess_ts() ahora agrega por mes (freq="MS") y resuelve rutas relativas a su
+    # propio archivo; antes agregaba por semana (freq="W"). Para el comportamiento
+    # anterior: preprocess_ts(freq="W").
     ts_path = preprocess_ts()
     data_ts = h2o.import_file(path=ts_path)
     aml2 = H2OAutoML(max_runtime_secs = 60, seed = 42, project_name = "sales_forecasting")
     aml2.train(y = "Sales", training_frame = data_ts)
     print(aml2.leaderboard.sort(by="rmse").to_pretty_str())
+    # Ojo: este rendimiento se mide sobre los mismos datos de entrenamiento (optimista);
+    # no es comparable con las métricas en test del notebook ARIMA.
     print(aml2.leader.model_performance(data_ts))
-    
