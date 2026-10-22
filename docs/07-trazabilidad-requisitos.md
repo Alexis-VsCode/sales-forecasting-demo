@@ -29,7 +29,7 @@ Vincula cada requisito con los archivos que lo cubren, la evidencia disponible y
 | E-6 | `docs/06-guia-presentacion.md` | `docs/06-guia-presentacion.md` | Guion 10 min, 14 preguntas, reflexión del taller | COMPLETADO |
 | E-7 | `docs/07-trazabilidad-requisitos.md` | Este documento | Estados actualizados con la evidencia de docs/05 | COMPLETADO |
 | E-8 | Código modular | `src/sales_forecasting/*.py`, `src/modeling/arima_trainer.py` | Commit `3ebfe87` | COMPLETADO |
-| E-9 | Pruebas automatizadas | `tests/` (9 módulos) | `127 passed, 3 xfailed` (docs/05 §2); los 3 `xfail` documentan 2 bugs conocidos sin corregir | COMPLETADO |
+| E-9 | Pruebas automatizadas | `tests/` (9 módulos) | `130 passed` (docs/05 §2); los 2 bugs detectados por las pruebas se corrigieron en `10db0fd` | COMPLETADO |
 | E-10 | CI de GitHub Actions | `.github/workflows/ci.yml` | Archivo presente; sus comandos pasan en local (docs/05 §2–5); ninguna ejecución en GitHub observada | NO VERIFICADO (en GitHub, pendiente tras el push) |
 | E-11 | Informe académico final en Markdown, listo para PDF | `docs/08-informe-final.md` | Redactado; conversión a PDF pendiente | PARCIAL |
 | E-12 | Inventario técnico | `docs/01-inventario-tecnico.md` | Hallazgos con evidencia de commits y archivos | COMPLETADO |
@@ -43,7 +43,7 @@ Vincula cada requisito con los archivos que lo cubren, la evidencia disponible y
 | A-2 | Pipeline ejecutable de extremo a extremo con datos legales | `src/sales_forecasting/pipeline.py`, `cli.py` | Reejecución del CLI en un directorio temporal con `exit=0` (docs/05 §4); dataset público Superstore (licencia exacta PENDIENTE DE EVIDENCIA) | COMPLETADO (licencia del dataset PENDIENTE DE EVIDENCIA) |
 | A-3 | Resultados reproducibles y métricas verificables | `reports/metrics.json`, `tests/test_pipeline_integration.py::test_results_match_committed_reports` | La prueba pasa; además, `metrics.json` regenerado es idéntico clave por clave y los CSV coinciden con `cmp` (docs/05 §2 y §4) | COMPLETADO |
 | A-4 | Sin secretos, sin rutas absolutas personales, sin fuga temporal | `configs/forecast.toml`, `config.py` (rutas relativas a la raíz), `split.py` | Escaneo `grep` de patrones de secretos: 0 coincidencias; ruta absoluta redactada en la evidencia de H2O; `test_no_temporal_leakage` pasa (docs/05 §9) | COMPLETADO (escaneo por patrones, no una herramienta dedicada) |
-| A-5 | Pruebas y lint ejecutados, con fallos reportados | `tests/`, `pyproject.toml` (ruff) | pytest: 127 pasan y 3 `xfail` reportados; ruff check y format sin errores (docs/05 §2–3) | COMPLETADO |
+| A-5 | Pruebas y lint ejecutados, con fallos reportados | `tests/`, `pyproject.toml` (ruff) | pytest: 130 pasan; los 2 fallos detectados se reportaron y se corrigieron (`10db0fd`); ruff check y format sin errores (docs/05 §2–3) | COMPLETADO |
 | A-6 | Documentación alineada con el comportamiento real | `docs/`, `README.md` | Cifras contrastadas automáticamente con `reports/`, las salidas del notebook y la evidencia; 4 afirmaciones corregidas (docs/05 §9) | COMPLETADO |
 | A-7 | Demostración comprensible | `docs/06-guia-presentacion.md` | Guion y plan B | COMPLETADO |
 
@@ -54,7 +54,7 @@ Vincula cada requisito con los archivos que lo cubren, la evidencia disponible y
 | T-1 | Código en la rama remota (`feat/maestria-sales-forecasting` en `Alexis-VsCode/sales-forecasting-demo`) | Rama local de trabajo: `ccr-4cf3b734-xo4ifd`; no se ha observado push de `feat/maestria-sales-forecasting` | NO VERIFICADO (pendiente) |
 | T-2 | Pull Request abierto hacia `main` | — | NO VERIFICADO (pendiente) |
 | T-3 | Instrucciones reproducibles | `docs/03-manual-instalacion-ejecucion.md`, `README.md` | COMPLETADO |
-| T-4 | Pruebas verificadas | `127 passed, 3 xfailed` en local (docs/05 §2); CI en GitHub pendiente | COMPLETADO en local; CI en GitHub NO VERIFICADO |
+| T-4 | Pruebas verificadas | `130 passed` en local (docs/05 §2); CI en GitHub pendiente | COMPLETADO en local; CI en GitHub NO VERIFICADO |
 | T-5 | Resultados sustentados | `reports/metrics.json`, `reports/arima_grid_search.csv`, notebook ejecutado | COMPLETADO |
 | T-6 | Documentación académica alineada con la consigna | `docs/04-…`, `docs/08-informe-final.md` | COMPLETADO |
 | T-7 | Fork verificado y permisos de escritura | `git remote -v`: `origin` = https://github.com/Alexis-VsCode/sales-forecasting-demo; permisos de escritura no comprobados | NO VERIFICADO (pendiente del push) |
@@ -66,4 +66,4 @@ Vincula cada requisito con los archivos que lo cubren, la evidencia disponible y
 | Gobernanza ISSPOL | PENDIENTE DE DEFINICIÓN con el estudiante (no hay contenido en el repositorio) |
 | Datos de portada (nombre, curso, fecha) | Por completar por el estudiante |
 | Licencia del upstream | Sin `LICENSE`; uso académico; solicitar permiso para redistribuir |
-| Bugs conocidos del paquete (`validate_sales` acepta fechas vacías; `temporal_train_test_split` usa `assert`) | Documentados como `xfail(strict=True)`; decidir si se corrigen (y quitar los `xfail`) |
+| Bugs del paquete detectados por las pruebas (`validate_sales` aceptaba fechas vacías; `temporal_train_test_split` usaba `assert`) | Corregidos en `10db0fd`, con los `xfail` retirados. Queda un defecto menor sin prueba: `validate_sales` acepta `Sales="inf"` y valores booleanos |

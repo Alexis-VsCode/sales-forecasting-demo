@@ -7810,6 +7810,28 @@ pre { white-space: pre-wrap !important; word-break: break-word; overflow-wrap: a
 </head>
 <body class="jp-Notebook" data-jp-theme-light="true" data-jp-theme-name="JupyterLab Light">
 <main>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=3f57f59f">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<div style="text-align:center; padding: 40px 0 30px 0;">
+<p><strong>UNIVERSIDAD CASA GRANDE</strong></p>
+<p>Maestría · Taller <em>No &amp; Low Code Tools vs AI Assisted Coding</em></p>
+<br/>
+<h1 id="S1-Notebook:-Modelo-ARIMA-para-predicci%C3%B3n-de-ventas-mensuales">S1-Notebook: Modelo ARIMA para predicción de ventas mensuales<a class="anchor-link" href="#S1-Notebook:-Modelo-ARIMA-para-predicci%C3%B3n-de-ventas-mensuales">¶</a></h1><br/>
+<p><strong>Estudiante:</strong> Kevin Barrera</p>
+<p><strong>Docente:</strong> Mtr. Raquel Vargas</p>
+<p><strong>Fecha:</strong> 21 de octubre de 2026</p>
+<br/>
+<p>Repositorio: <a href="https://github.com/Alexis-VsCode/sales-forecasting-demo">https://github.com/Alexis-VsCode/sales-forecasting-demo</a></p>
+</div>
+<div style="page-break-after: always;"></div>
+</div>
+</div>
+</div>
+</div>
 <div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=890690ab">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
@@ -7829,7 +7851,7 @@ pre { white-space: pre-wrap !important; word-break: break-word; overflow-wrap: a
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <p><strong>Taller:</strong> <em>No &amp; Low Code Tools vs AI Assisted Coding</em> (Maestría, UCG Casa Grande), Mtr. Raquel Vargas.
 <strong>Actividad:</strong> S1-Notebook: Modelo ARIMA para predicción de ventas mensuales.
-<strong>Estudiante:</strong> <em>(completar)</em></p>
+<strong>Estudiante:</strong> Kevin Barrera</p>
 <p><strong>Objetivo.</strong> Desarrollar, con asistencia de IA, un modelo ARIMA estacional (SARIMA) que pronostique la serie de ventas mensuales, validarlo con una partición temporal entrenamiento/prueba y compararlo con pronósticos de referencia (<em>baselines</em>).</p>
 <p><strong>Dataset.</strong> <code>src/data/stores_sales_forecasting.csv</code> (Superstore, categoría <em>Furniture</em>): 2121 transacciones con fecha de pedido (<code>Order Date</code>) entre el 2014-01-06 y el 2017-12-30. Las ventas (<code>Sales</code>) se suman por mes, lo que da una serie de 48 observaciones (2014-01 a 2017-12). El archivo CSV original no se modifica.</p>
 <p><strong>Uso de asistencia de IA.</strong> El código de la sesión en vivo se siguió con GitHub Copilot Chat en Visual Studio Code, y esta versión final se completó y revisó con apoyo de un asistente de código de IA. Lo que proponía la IA se contrastó con las salidas reales del código. Por ejemplo, se corrigieron dos defectos del template: la agregación semanal (<code>freq='W'</code>), cuando la consigna pide una serie mensual, y la ruta de datos <code>../../src/data/</code>, que no existe desde la carpeta <code>notebooks/</code>.</p>
@@ -9573,7 +9595,7 @@ Prueba:        2017-01 a 2017-12
 Dep. Variable:                            Sales   No. Observations:                   36
 Model:             ARIMA(0, 1, 0)x(0, 1, 0, 12)   Log Likelihood                -232.820
 Date:                          Thu, 22 Oct 2026   AIC                            467.639
-Time:                                  04:04:59   BIC                            468.775
+Time:                                  04:12:04   BIC                            468.775
 Sample:                              01-01-2014   HQIC                           467.925
                                    - 12-01-2016                                         
 Covariance Type:                            opg                                         
@@ -10318,7 +10340,7 @@ Meses en que el SARIMA sobreestima la venta real: 12 de 12
 Dep. Variable:                            Sales   No. Observations:                   36
 Model:             ARIMA(0, 1, 0)x(1, 1, 0, 12)   Log Likelihood                -230.971
 Date:                          Thu, 22 Oct 2026   AIC                            465.942
-Time:                                  04:05:05   BIC                            468.213
+Time:                                  04:12:10   BIC                            468.213
 Sample:                              01-01-2014   HQIC                           466.513
                                    - 12-01-2016                                         
 Covariance Type:                            opg                                         

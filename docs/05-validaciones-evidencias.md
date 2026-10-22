@@ -2,8 +2,8 @@
 
 Este documento recoge los comandos que se ejecutaron de verdad para validar el proyecto y sus salidas, recortadas solo donde se indica con `…`. No se incluye ninguna salida inventada ni resumida de memoria.
 
-- **Fecha de la verificación:** 2026-10-22 (UTC), entre las 04:01 y las 04:07.
-- **Código verificado:** rama local `ccr-4cf3b734-xo4ifd`, a partir del commit `5fb8a60`.
+- **Fecha de la verificación:** 2026-10-22 (UTC), entre las 04:01 y las 04:11.
+- **Código verificado:** rama local `ccr-4cf3b734-xo4ifd`. Primera pasada sobre `5fb8a60`; pytest, ruff, pipeline y ZIP se repitieron después de `10db0fd` (corrección de `data.py` y `split.py`).
 - **Entorno:** contenedor Linux de un solo usuario, con entorno virtual `.venv` y el paquete instalado en modo editable (`pip install -e .`). Todos los comandos se lanzan desde la raíz del repositorio con `.venv` activado.
 - **Ejecución de cada comando:** una sola vez, salvo que se indique lo contrario.
 
@@ -12,7 +12,7 @@ Este documento recoge los comandos que se ejecutaron de verdad para validar el p
 | # | Verificación | Resultado |
 |---|---|---|
 | 1 | Versiones de Python, Java y bibliotecas | PASS |
-| 2 | `pytest` | PASS: 127 pasan y 3 son `xfail` (bugs conocidos y documentados) |
+| 2 | `pytest` | PASS: 130 pasan (los 2 bugs detectados se corrigieron en `10db0fd`) |
 | 3 | `ruff check` y `ruff format --check` | PASS |
 | 4 | Pipeline por CLI en un directorio temporal, comparado con `reports/` | PASS: `metrics.json`, `arima_grid_search.csv` y `forecast_future.csv` idénticos |
 | 5 | Ejecución del notebook con nbconvert | PASS: 0 errores y 35 de 35 celdas de código ejecutadas |
@@ -54,28 +54,31 @@ La salida de `java -version` también imprime una línea `Picked up JAVA_TOOL_OP
 
 ```text
 $ pytest -q ; echo "exit=$?"
-.......................................................xx............... [ 55%]
-.........................................................x               [100%]
+........................................................................ [ 55%]
+..........................................................               [100%]
 exit=0
 
-$ pytest -o addopts="" -q -rx
-XFAIL tests/test_data.py::test_empty_dates_are_rejected[None] - BUG en sales_forecasting.data.validate_sales: pd.to_datetime convierte fechas vacías (None/''/NaN) en NaT sin error y aggregate_sales descarta esas filas en silencio. Si se corrige, quitar este xfail.
-XFAIL tests/test_data.py::test_empty_dates_are_rejected[] - BUG en sales_forecasting.data.validate_sales: …
-XFAIL tests/test_split.py::test_duplicated_timestamp_at_boundary_raises_value_error - BUG menor en sales_forecasting.split: con fechas duplicadas en el borde train/test la validación depende de un `assert` (AssertionError, o nada con `python -O`) en vez de ValueError. Si se corrige, quitar este xfail.
-127 passed, 3 xfailed in 7.04s
+$ pytest -o addopts="" -q
+..........................................................               [100%]
+130 passed in 7.01s
 
 $ pytest -o addopts="" -q -m "not integration"
-118 passed, 9 deselected, 3 xfailed in 2.85s
+121 passed, 9 deselected in 2.65s
+
+$ pytest -o addopts="" -q -rA | grep -E "empty_dates|duplicated_timestamp"
+PASSED tests/test_data.py::test_empty_dates_are_rejected[None]
+PASSED tests/test_data.py::test_empty_dates_are_rejected[]
+PASSED tests/test_split.py::test_duplicated_timestamp_at_boundary_raises_value_error
 ```
 
 `pyproject.toml` ya define `addopts = "-q"`, así que `pytest -q` no imprime la línea de resumen. Para obtener los recuentos se usa `-o addopts=""`.
 
-Los 3 `xfail` son estrictos (`strict=True`) y documentan dos defectos reales del paquete que siguen sin corregir:
+**Bugs corregidos durante la verificación (commit `10db0fd`).** En una primera pasada (sobre `5fb8a60`) la suite dio `127 passed, 3 xfailed`: tres `xfail(strict=True)` documentaban dos defectos reales del paquete.
 
-- **`validate_sales`:** acepta fechas vacías y descarta esas ventas en silencio.
-- **`temporal_train_test_split`:** valida el solapamiento con `assert` en lugar de lanzar `ValueError`.
+- `validate_sales` aceptaba fechas vacías (`None`, `''`) y `aggregate_sales` descartaba esas ventas en silencio. Ahora lanza `DataValidationError`.
+- `temporal_train_test_split` validaba el solapamiento con `assert`. Ahora lanza `ValueError` con fechas duplicadas en el borde train/test.
 
-Si alguien corrige cualquiera de los dos, la prueba correspondiente pasará y, por ser estricta, la suite fallará hasta que se quite su `xfail`.
+Tras la corrección se quitaron los `xfail` y las tres pruebas pasan. La corrección no cambia ningún resultado: el pipeline vuelve a generar `reports/` idéntico (sección 4).
 
 ## 3. Lint y formato (ruff)
 
@@ -127,6 +130,7 @@ arima_grid_search.csv  figures  forecast_future.csv  forecast_test.csv  metrics.
   grid_same
   ```
 
+- **Repetición tras `10db0fd`:** el pipeline se ejecutó de nuevo con el código corregido en otro directorio temporal (`exit=0`). Los 6 archivos (`metrics.json`, `metrics.csv`, `arima_grid_search.csv`, `forecast_test.csv`, `forecast_future.csv` y `monthly_sales.csv`) resultaron idénticos a los de `reports/` según `cmp`.
 - **Directorio de trabajo:** al terminar, `git status --short reports/ src/ configs/` no mostró cambios. El pipeline y las pruebas no modifican `reports/`, el CSV ni la configuración.
 
 ## 5. Ejecución del notebook (nbconvert)
@@ -180,20 +184,22 @@ File size:       1574484 bytes
 $ unzip -l entrega/S1_Notebook_ARIMA_ventas_mensuales.zip
   Length      Date    Time    Name
 ---------  ---------- -----   ----
-        0  2026-10-22 04:05   S1_Notebook_ARIMA_ventas_mensuales/
-        …  (src/sales_forecasting/: 11 archivos .py)
-   494695  2026-10-22 04:05   S1_Notebook_ARIMA_ventas_mensuales/src/data/stores_sales_forecasting.csv
-      485  2026-10-22 04:05   S1_Notebook_ARIMA_ventas_mensuales/src/modeling/arima_trainer.py
-      118  2026-10-22 04:05   S1_Notebook_ARIMA_ventas_mensuales/requirements.txt
-     9017  2026-10-22 04:05   S1_Notebook_ARIMA_ventas_mensuales/README.md
-     2991  2026-10-22 04:05   S1_Notebook_ARIMA_ventas_mensuales/README_ENTREGA.md
-   811232  2026-10-22 04:05   S1_Notebook_ARIMA_ventas_mensuales/notebooks/ventas_mensuales_live_coding.ipynb
-      731  2026-10-22 04:05   S1_Notebook_ARIMA_ventas_mensuales/configs/forecast.toml
-      992  2026-10-22 04:05   S1_Notebook_ARIMA_ventas_mensuales/pyproject.toml
-  1142232  2026-10-22 04:05   S1_Notebook_ARIMA_ventas_mensuales/S1_Notebook_ARIMA_ventas_mensuales.html
-  1574484  2026-10-22 04:05   S1_Notebook_ARIMA_ventas_mensuales/S1_Notebook_ARIMA_ventas_mensuales.pdf
+        0  2026-10-22 04:10   S1_Notebook_ARIMA_ventas_mensuales/
+      819  2026-10-22 04:10   S1_Notebook_ARIMA_ventas_mensuales/src/sales_forecasting/split.py
+     2802  2026-10-22 04:10   S1_Notebook_ARIMA_ventas_mensuales/src/sales_forecasting/data.py
+        …  (otros 9 archivos .py de src/sales_forecasting/)
+   494695  2026-10-22 04:10   S1_Notebook_ARIMA_ventas_mensuales/src/data/stores_sales_forecasting.csv
+      485  2026-10-22 04:10   S1_Notebook_ARIMA_ventas_mensuales/src/modeling/arima_trainer.py
+      118  2026-10-22 04:10   S1_Notebook_ARIMA_ventas_mensuales/requirements.txt
+     9017  2026-10-22 04:10   S1_Notebook_ARIMA_ventas_mensuales/README.md
+     2991  2026-10-22 04:10   S1_Notebook_ARIMA_ventas_mensuales/README_ENTREGA.md
+   811232  2026-10-22 04:10   S1_Notebook_ARIMA_ventas_mensuales/notebooks/ventas_mensuales_live_coding.ipynb
+      731  2026-10-22 04:10   S1_Notebook_ARIMA_ventas_mensuales/configs/forecast.toml
+      992  2026-10-22 04:10   S1_Notebook_ARIMA_ventas_mensuales/pyproject.toml
+  1142232  2026-10-22 04:10   S1_Notebook_ARIMA_ventas_mensuales/S1_Notebook_ARIMA_ventas_mensuales.html
+  1574484  2026-10-22 04:10   S1_Notebook_ARIMA_ventas_mensuales/S1_Notebook_ARIMA_ventas_mensuales.pdf
 ---------                     -------
-  4059882                     28 files
+  4060116                     28 files
 
 $ unzip -l entrega/S1_Notebook_ARIMA_ventas_mensuales.zip | grep -cE '\.venv|__pycache__|\.pyc'
 0
@@ -201,8 +207,8 @@ $ unzip -l entrega/S1_Notebook_ARIMA_ventas_mensuales.zip | grep -cE '\.venv|__p
 
 **Comprobaciones adicionales:**
 
-- **Correspondencia con el repositorio:** el `.ipynb` y el `README.md` del ZIP son idénticos byte a byte (`cmp`) a los del repositorio. El ZIP se regeneró en esta verificación porque la versión anterior contenía el `README.md` original, que pedía Java >= 27.
-- **Ejecución desde el ZIP:** se descomprimió el ZIP en un directorio temporal y se ejecutó su notebook con nbconvert. Terminó con `EXIT=0` y reprodujo las mismas cifras, por ejemplo RMSE 12939.46 del SARIMA y 4473.38 del *seasonal naive*.
+- **Correspondencia con el repositorio:** el `.ipynb` y el `README.md` del ZIP son idénticos byte a byte (`cmp`) a los del repositorio. El ZIP se regeneró dos veces en esta verificación: la primera porque contenía el `README.md` original, que pedía Java >= 27, y la segunda para incluir el `src/` corregido en `10db0fd`. Tras la segunda, `diff -rq` entre `src/sales_forecasting` del ZIP y del repositorio no muestra diferencias.
+- **Ejecución desde el ZIP:** se descomprimió el ZIP en un directorio temporal y se ejecutó su notebook con nbconvert (tras la segunda regeneración). Terminó con `EXIT=0`, 0 errores y reprodujo las mismas cifras, por ejemplo RMSE 12939.46 del SARIMA y 4473.38 del *seasonal naive*.
 
 ## 8. Prueba de humo de H2O (Java 21)
 
