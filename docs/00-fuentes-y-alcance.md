@@ -26,7 +26,7 @@ Este documento registra qué fuentes se revisaron para preparar la entrega, cuá
 | 2 | Presentación del taller | `No & Low Code Tools vs Al Assisted Coding.pdf` (raíz del repo) | Agenda, pros/contras Low/No-Code y AI-Assisted, requisitos de la práctica (VS Code, Python >= 3.13, Copilot Chat), referencias. |
 | 3 | Instrucciones del proyecto (`CLAUDE.md` del estudiante) | Archivo adjunto | Lista de entregables (§7), criterios de aceptación (§9), formato de reportes (§10), definición de terminado (§14). |
 | 4 | Repositorio upstream | https://github.com/raquelvargas16/sales-forecasting-demo — historial local hasta `81034bc` (2026-10-06) | Código base: notebook template, `src/modeling/arima_trainer.py` (stub), `h2o_demo/`, `requirements.txt`, CSV. |
-| 5 | Historial Git local | `git log` (21 commits; 19 de la autora original, 2 de la evolución) | Trazabilidad de cambios. |
+| 5 | Historial Git local | `git log` (al redactar este documento: 21 commits, 19 de la autora original y 2 de la evolución; después se añadieron `be15fee`, `826d6ce` y `5fb8a60`) | Trazabilidad de cambios. |
 | 6 | Código y resultados de la evolución | `src/sales_forecasting/`, `configs/forecast.toml`, `reports/metrics.json`, `reports/metrics.csv`, `reports/arima_grid_search.csv` | Todas las cifras de la documentación. |
 | 7 | Notebook ejecutado | `notebooks/ventas_mensuales_live_coding.ipynb` (35 celdas de código, 32 con salidas) | Cifras exploratorias complementarias (se citan indicando que provienen del notebook). |
 | 8 | Evidencia de H2O | `reports/evidence/h2o_smoke.txt` | Compatibilidad H2O 3.46.0.12 con OpenJDK 21. |

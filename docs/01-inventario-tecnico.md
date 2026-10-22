@@ -3,7 +3,7 @@
 Documento de la Fase 0 (descubrimiento). Sigue el formato del §10 de las instrucciones del proyecto. Cada hallazgo indica su **evidencia** (archivo, línea o commit) para que se pueda comprobar.
 
 - **Línea base analizada:** commit `81034bc` (2026-10-06, autora `raquelvargas16`), último commit del repositorio original.
-- **Evolución:** commits `3ebfe87` (paquete modular) y `5304e4f` (resultados reales), más cambios aún sin commitear en el árbol de trabajo (notebook, `h2o_demo/`, `tests/`, `.github/`, `entrega/`).
+- **Evolución:** commits `3ebfe87` (paquete modular), `5304e4f` (resultados reales), `be15fee` (notebook y entrega), `826d6ce` (pruebas, CI y `h2o_demo/`) y `5fb8a60` (documentación).
 
 ---
 
@@ -99,7 +99,7 @@ El repositorio original es un **material de clase** pensado para completarse en 
 | ID | Hallazgo | Evidencia | Resolución / estado |
 |---|---|---|---|
 | M-1 | README exige Java >= 27 | `81034bc:README.md`, commit "Update README.md to include Java OpenJDK version requirement" | H2O 3.46.0.12 arrancó con OpenJDK 21 (`reports/evidence/h2o_smoke.txt`). Java solo es necesario para la demo opcional de H2O. README actualizado. |
-| M-2 | Rutas frágiles en `h2o_demo` | `preprocess_ts(data_path="../../src/data/...")` y `result_path = "data/aggregated_sales.csv"` dependen del directorio de trabajo; `h2o_demo/data/` no existía | Rutas resueltas desde `__file__` y `mkdir(parents=True)` (cambio sin commitear en el árbol de trabajo). |
+| M-2 | Rutas frágiles en `h2o_demo` | `preprocess_ts(data_path="../../src/data/...")` y `result_path = "data/aggregated_sales.csv"` dependen del directorio de trabajo; `h2o_demo/data/` no existía | Rutas resueltas desde `__file__` y `mkdir(parents=True)` (commit `826d6ce`). |
 | M-3 | AutoML evaluado sobre los mismos datos de entrenamiento | `print(aml2.leader.model_performance(data_ts))` en `h2o_demo/main.py` | Documentado como optimista y no comparable; no forma parte del núcleo. |
 | M-4 | Partición aleatoria (`split_frame`) en `run_automl` | `h2o_demo/main.py` | Adecuada para datos tabulares i.i.d., no para series de tiempo. Documentado en el docstring. |
 | M-5 | Parseo de fechas sin formato explícito | `pd.to_datetime(dataset['Order Date'])` | Se fija `format="%m/%d/%Y"` para evitar ambigüedad día/mes. |
@@ -140,8 +140,8 @@ Ver `docs/02-arquitectura.md` (diagrama y ADR). El plan aplicado fue:
 1. Fase 0 — inventario (este documento).
 2. Fase 1 — paquete `sales_forecasting` con pipeline y baselines (`3ebfe87`).
 3. Fase 2 — resultados reales del pipeline (`5304e4f`).
-4. Fase 3 — notebook mensual completo, correcciones de `h2o_demo`, pruebas, CI y entrega compilada (árbol de trabajo).
-5. Fase 4 — documentación (`docs/`, `README.md`) y validaciones (`docs/05-validaciones-evidencias.md`).
+4. Fase 3 — notebook mensual completo, correcciones de `h2o_demo`, pruebas, CI y entrega compilada (`be15fee`, `826d6ce`).
+5. Fase 4 — documentación (`docs/`, `README.md`; `5fb8a60`) y validaciones (`docs/05-validaciones-evidencias.md`).
 
 ## 9. Deuda técnica remanente
 

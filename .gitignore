@@ -6,3 +6,7 @@ __pycache__
 .pytest_cache/
 .ruff_cache/
 h2o_demo/data/
+
+# Salidas de la CI (artifacts), no se versionan
+ci-reports/
+ci-notebooks/
